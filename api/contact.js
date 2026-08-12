@@ -39,7 +39,12 @@ export default async function handler(req, res) {
       port: Number(SMTP_PORT || 465),
       secure: Number(SMTP_PORT || 465) === 465,
       auth: { user: SMTP_USER, pass: SMTP_PASS },
+      connectionTimeout: 15000,
+      greetingTimeout: 10000,
+      socketTimeout: 20000,
     });
+
+    await transporter.verify();
 
     const rows = [
       ['Name', clean(name)],
@@ -63,7 +68,19 @@ export default async function handler(req, res) {
     });
 
     return res.status(200).json({ ok: true });
-  } catch {
-    return res.status(502).json({ error: 'Could not send the message' });
+  } catch (error) {
+    // Surfaced so SMTP misconfiguration is diagnosable from the response and
+    // the Vercel function logs. Contains no credentials.
+    console.error('[contact] SMTP failure', {
+      code: error?.code,
+      command: error?.command,
+      response: error?.response,
+      message: error?.message,
+    });
+    return res.status(502).json({
+      error: 'Could not send the message',
+      code: error?.code ?? null,
+      detail: error?.response ?? error?.message ?? null,
+    });
   }
 }
