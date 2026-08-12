@@ -1,0 +1,2 @@
+# Drop original photography here (JPG/PNG/TIFF).
+# `npm run optimize:images` converts them to WebP in ../optimized.
