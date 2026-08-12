@@ -115,7 +115,7 @@ export default function Sectors() {
       </Section>
 
       {/* ---- Paginated 2 x 2 grid ---- */}
-      <Section id="sectors" tone="none" className="relative overflow-hidden pt-8 md:pt-10" containerClassName="max-w-none px-10 sm:px-20 lg:px-32 xl:px-48">
+      <Section id="sectors" tone="none" className="relative overflow-hidden pt-8 md:pt-10">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <img
             src={sectorsIntro.gridBackgroundImage}
@@ -144,7 +144,7 @@ export default function Sectors() {
               initial={reduced ? false : 'hidden'}
               animate="visible"
               exit={reduced ? undefined : 'exit'}
-              className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10"
+              className="grid grid-cols-1 gap-6 md:grid-cols-2"
             >
               {view.items.map((sector) => {
                 const Icon = getIcon(sector.icon);
