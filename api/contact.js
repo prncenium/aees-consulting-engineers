@@ -33,63 +33,81 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Mail transport is not configured' });
   }
 
-  try {
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST || 'smtp.titan.email',
-      port: Number(SMTP_PORT || 465),
-      secure: Number(SMTP_PORT || 465) === 465,
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
-      connectionTimeout: 15000,
-      greetingTimeout: 10000,
-      socketTimeout: 20000,
-    });
+  const host = SMTP_HOST || 'smtp.titan.email';
+  const configured = Number(SMTP_PORT || 465);
 
-    await transporter.verify();
+  // Titan accepts implicit TLS on 465 and STARTTLS on 587. Some mailboxes are
+  // only enabled for one of them, so try the configured port first and fall
+  // back to the other rather than failing outright.
+  const ports = configured === 587 ? [587, 465] : [465, 587];
 
-    const rows = [
-      ['Name', clean(name)],
-      ['Email', clean(email)],
-      ['Phone', clean(phone)],
-      ['Subject', clean(subject)],
-    ];
+  const rows = [
+    ['Name', clean(name)],
+    ['Email', clean(email)],
+    ['Phone', clean(phone)],
+    ['Subject', clean(subject)],
+  ];
 
-    await transporter.sendMail({
-      from: `"AEES website" <${SMTP_USER}>`,
-      to: MAIL_TO || SMTP_USER,
-      replyTo: `"${clean(name)}" <${clean(email)}>`,
-      subject: `Website enquiry — ${clean(subject)}`,
-      text: `${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nMessage:\n${clean(message)}`,
-      html: `<table cellpadding="6">${rows
-        .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${v}</td></tr>`)
-        .join('')}</table><p><strong>Message</strong></p><p>${clean(message).replace(
-        /\n/g,
-        '<br>'
-      )}</p>`,
-    });
+  const textBody =
+    rows.map(([k, v]) => k + ': ' + v).join('\n') + '\n\nMessage:\n' + clean(message);
 
-    return res.status(200).json({ ok: true });
-  } catch (error) {
-    // Surfaced so SMTP misconfiguration is diagnosable from the response and
-    // the Vercel function logs. Contains no credentials.
-    console.error('[contact] SMTP failure', {
-      code: error?.code,
-      command: error?.command,
-      response: error?.response,
-      message: error?.message,
-    });
-    return res.status(502).json({
-      error: 'Could not send the message',
-      code: error?.code ?? null,
-      detail: error?.response ?? error?.message ?? null,
-      // Masked config echo so a misconfigured variable is obvious without
-      // ever exposing the password itself.
-      config: {
-        host: SMTP_HOST || 'smtp.titan.email',
-        port: Number(SMTP_PORT || 465),
-        user: SMTP_USER,
-        passLength: SMTP_PASS ? SMTP_PASS.length : 0,
-        passHasWhitespace: SMTP_PASS ? SMTP_PASS !== SMTP_PASS.trim() : false,
-      },
-    });
+  const htmlBody =
+    '<table cellpadding="6">' +
+    rows.map(([k, v]) => '<tr><td><strong>' + k + '</strong></td><td>' + v + '</td></tr>').join('') +
+    '</table><p><strong>Message</strong></p><p>' +
+    clean(message).replace(/\n/g, '<br>') +
+    '</p>';
+
+  const mail = {
+    from: '"AEES website" <' + SMTP_USER + '>',
+    to: MAIL_TO || SMTP_USER,
+    replyTo: '"' + clean(name) + '" <' + clean(email) + '>',
+    subject: 'Website enquiry — ' + clean(subject),
+    text: textBody,
+    html: htmlBody,
+  };
+
+  let lastError = null;
+
+  for (const port of ports) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host,
+        port,
+        secure: port === 465,
+        requireTLS: port !== 465,
+        auth: { user: SMTP_USER, pass: SMTP_PASS },
+        connectionTimeout: 15000,
+        greetingTimeout: 10000,
+        socketTimeout: 20000,
+      });
+
+      await transporter.sendMail(mail);
+      return res.status(200).json({ ok: true });
+    } catch (error) {
+      lastError = error;
+      console.error('[contact] SMTP failure', {
+        port,
+        code: error?.code,
+        command: error?.command,
+        response: error?.response,
+        message: error?.message,
+      });
+    }
   }
+
+  return res.status(502).json({
+    error: 'Could not send the message',
+    code: lastError?.code ?? null,
+    detail: lastError?.response ?? lastError?.message ?? null,
+    // Masked config echo so a misconfigured variable is obvious without ever
+    // exposing the password itself.
+    config: {
+      host,
+      portsTried: ports,
+      user: SMTP_USER,
+      passLength: SMTP_PASS ? SMTP_PASS.length : 0,
+      passHasWhitespace: SMTP_PASS ? SMTP_PASS !== SMTP_PASS.trim() : false,
+    },
+  });
 }
