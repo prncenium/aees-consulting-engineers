@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { ChevronDown, Mail, Menu, Phone, X } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import Logo from '@/components/ui/Logo';
 import Button from '@/components/ui/Button';
-import { navigation } from '@/data/site';
+import { navigation, offices } from '@/data/site';
 import { useScrolled } from '@/hooks/useScrolled';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
@@ -21,12 +21,15 @@ export default function Navbar() {
   const scrolled = useScrolled(24);
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const head = offices[0];
   const { pathname } = useLocation();
   const triggerRef = useRef(null);
   const panelRef = useRef(null);
 
   useEffect(() => {
     setOpen(false);
+    setContactOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -128,7 +131,58 @@ export default function Navbar() {
                   </NavLink>
                 ))}
               </nav>
-              <Button to="/contact" size="md" variant="primary" className="mt-4 w-full">
+              {/* Contact details, collapsed by default */}
+              <div className="mt-3 border-t border-hairline pt-3">
+                <button
+                  type="button"
+                  onClick={() => setContactOpen((value) => !value)}
+                  aria-expanded={contactOpen}
+                  aria-controls="mobile-contact"
+                  className="flex min-h-[52px] w-full cursor-pointer items-center justify-between gap-3 rounded-2xl px-4 text-[1.0625rem] font-medium text-ink transition-colors duration-200 hover:bg-white/70"
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
+                    Call or email us
+                  </span>
+                  <ChevronDown
+                    aria-hidden="true"
+                    className={cn(
+                      'h-4 w-4 shrink-0 text-muted transition-transform duration-300',
+                      contactOpen && 'rotate-180'
+                    )}
+                    strokeWidth={2}
+                  />
+                </button>
+
+                <div id="mobile-contact" hidden={!contactOpen} className="px-4 pb-2 pt-1">
+                  <ul className="flex flex-col">
+                    {head.phones.map((phone) => (
+                      <li key={phone}>
+                        <a
+                          href={`tel:${phone.replace(/[\s-]/g, '')}`}
+                          className="flex min-h-[48px] items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                        >
+                          <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
+                          {phone}
+                        </a>
+                      </li>
+                    ))}
+                    {head.emails.map((email) => (
+                      <li key={email}>
+                        <a
+                          href={`mailto:${email}`}
+                          className="flex min-h-[48px] items-center gap-3 break-all text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                        >
+                          <Mail aria-hidden="true" className="h-4 w-4 shrink-0 text-muted" strokeWidth={1.75} />
+                          {email}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <Button to="/contact" size="md" variant="primary" className="mt-3 w-full">
                 Start an enquiry
               </Button>
             </motion.div>
