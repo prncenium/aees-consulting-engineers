@@ -22,7 +22,7 @@ export const site = {
     full: 'Plot No. 2018/5839, Lane-2, Niladri Nagar, Jharpada, Bhubaneswar-751006, Odisha',
     mapQuery: 'Niladri Nagar, Jharpada, Bhubaneswar, Odisha 751006, India',
   },
-  url: 'https://www.aeesconsulting.in',
+  url: 'https://aeesconsulting.in',
   defaultOgImage: '/og-default.jpg',
   registrations: [
     'Established 2016',
