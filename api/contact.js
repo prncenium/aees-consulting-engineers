@@ -81,6 +81,15 @@ export default async function handler(req, res) {
       error: 'Could not send the message',
       code: error?.code ?? null,
       detail: error?.response ?? error?.message ?? null,
+      // Masked config echo so a misconfigured variable is obvious without
+      // ever exposing the password itself.
+      config: {
+        host: SMTP_HOST || 'smtp.titan.email',
+        port: Number(SMTP_PORT || 465),
+        user: SMTP_USER,
+        passLength: SMTP_PASS ? SMTP_PASS.length : 0,
+        passHasWhitespace: SMTP_PASS ? SMTP_PASS !== SMTP_PASS.trim() : false,
+      },
     });
   }
 }
