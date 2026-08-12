@@ -112,9 +112,7 @@ export const footer = {
       ],
     },
   ],
-  social: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/aees-consulting-engineers' },
-  ],
+  social: [],
   legal: [
     { label: 'Privacy', to: '/contact' },
     { label: 'Terms', to: '/contact' },

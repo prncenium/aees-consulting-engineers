@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import Logo from '@/components/ui/Logo';
 import GlassPanel from '@/components/ui/GlassPanel';
@@ -83,24 +82,6 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-              {footer.social.length ? (
-                <ul className="mt-7 flex flex-col gap-3">
-                  {footer.social.map((item) => (
-                    <li key={item.label}>
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="link-sweep inline-flex items-center gap-1.5 text-copy-sm font-medium text-accent-ink transition-colors duration-200 hover:text-ink"
-                      >
-                        {item.label}
-                        <ArrowUpRight aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
-                        <span className="sr-only">(opens in a new tab)</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
             </div>
           </div>
 
