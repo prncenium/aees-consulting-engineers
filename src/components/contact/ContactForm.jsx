@@ -39,7 +39,8 @@ export default function ContactForm() {
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
-  const [status, setStatus] = useState('idle'); // idle | submitting | success
+  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [company, setCompany] = useState(''); // honeypot
   const summaryRef = useRef(null);
   const fieldRefs = useRef({});
 
@@ -81,13 +82,18 @@ export default function ContactForm() {
 
     setStatus('submitting');
 
-    // No API yet — log the payload and simulate the round trip.
-    const payload = { ...values, submittedAt: new Date().toISOString() };
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    // eslint-disable-next-line no-console
-    console.log('[AEES] Contact form payload:', payload);
-
-    setStatus('success');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, company }),
+      });
+      if (!response.ok) throw new Error('Request failed');
+      setStatus('success');
+    } catch {
+      setStatus('error');
+      window.requestAnimationFrame(() => summaryRef.current?.focus());
+    }
   };
 
   const reset = () => {
@@ -121,8 +127,41 @@ export default function ContactForm() {
   return (
     <GlassPanel tier="read" className="p-6 sm:p-8">
       <form noValidate onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {/* Honeypot — hidden from people, filled by bots */}
+        <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
+          <label htmlFor="company-website">Company website</label>
+          <input
+            id="company-website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={company}
+            onChange={(event) => setCompany(event.target.value)}
+          />
+        </div>
+
+        {status === 'error' ? (
+          <div
+            ref={summaryRef}
+            tabIndex={-1}
+            role="alert"
+            className="rounded-2xl border border-danger/30 bg-danger-soft p-5 focus:outline-none"
+          >
+            <p className="flex items-center gap-2.5 text-small font-semibold text-danger-ink">
+              <AlertTriangle aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
+              We could not send your message
+            </p>
+            <p className="mt-2 text-copy-sm text-body">
+              Please try again, or email us directly at{' '}
+              <a className="link-sweep font-medium text-accent-ink" href="mailto:info@aeesconsulting.in">
+                info@aeesconsulting.in
+              </a>
+              .
+            </p>
+          </div>
+        ) : null}
         {/* ---- Focusable error summary ---- */}
-        {errorList.length > 0 ? (
+        {errorList.length > 0 && status !== 'error' ? (
           <div
             ref={summaryRef}
             tabIndex={-1}
