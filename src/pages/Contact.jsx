@@ -5,6 +5,7 @@ import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Card from '@/components/ui/Card';
+import ContactList from '@/components/ui/ContactList';
 import MapEmbed from '@/components/ui/MapEmbed';
 import RevealGroup, { Reveal, RevealItem } from '@/components/ui/Reveal';
 import ContactForm from '@/components/contact/ContactForm';
@@ -93,12 +94,18 @@ export default function Contact() {
                     <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={1.75} />
                   </span>
                   <h2 className="mt-5 text-small font-semibold text-meta">{channel.label}</h2>
-                  <a
-                    href={channel.href}
-                    className="link-sweep mt-2 w-fit break-words text-copy font-semibold text-ink transition-colors duration-200 hover:text-accent-ink"
-                  >
-                    {channel.value}
-                  </a>
+                  <ul className="mt-2 flex flex-col gap-1.5">
+                    {channel.values.map((entry) => (
+                      <li key={entry.value}>
+                        <a
+                          href={entry.href}
+                          className="link-sweep w-fit break-all text-copy font-semibold text-ink transition-colors duration-200 hover:text-accent-ink"
+                        >
+                          {entry.value}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                   <p className="mt-3.5 flex-1 text-copy-sm text-body">{channel.note}</p>
                 </Card>
               </RevealItem>
@@ -211,35 +218,9 @@ export default function Contact() {
                         </span>
                       ))}
                     </div>
-                    <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-                      <a
-                        href={`tel:${office.phone.replace(/\s/g, '')}`}
-                        className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                      >
-                        {office.phone}
-                      </a>
-                      {office.phoneAlt ? (
-                        <a
-                          href={`tel:${office.phoneAlt.replace(/\s/g, '')}`}
-                          className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                        >
-                          {office.phoneAlt}
-                        </a>
-                      ) : null}
-                      <a
-                        href={`mailto:${office.email}`}
-                        className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                      >
-                        {office.email}
-                      </a>
-                      {office.emailAlt ? (
-                        <a
-                          href={`mailto:${office.emailAlt}`}
-                          className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                        >
-                          {office.emailAlt}
-                        </a>
-                      ) : null}
+                    <div className="mt-4 flex flex-col gap-4">
+                      <ContactList type="phone" items={office.phones} />
+                      <ContactList type="email" items={office.emails} />
                     </div>
                     <a
                       href={mapLinkUrl(office.mapQuery)}

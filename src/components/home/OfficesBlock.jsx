@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import Section from '@/components/ui/Section';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Card from '@/components/ui/Card';
 import MapEmbed from '@/components/ui/MapEmbed';
+import ContactList from '@/components/ui/ContactList';
 import { offices, site } from '@/data/site';
 import { cn } from '@/lib/utils';
 
@@ -91,38 +92,8 @@ export default function OfficesBlock() {
                   ))}
                 </span>
               </p>
-              <a
-                href={`tel:${active.phone.replace(/\s/g, '')}`}
-                className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-              >
-                <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                {active.phone}
-              </a>
-              {active.phoneAlt ? (
-                <a
-                  href={`tel:${active.phoneAlt.replace(/\s/g, '')}`}
-                  className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                >
-                  <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                  {active.phoneAlt}
-                </a>
-              ) : null}
-              <a
-                href={`mailto:${active.email}`}
-                className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-              >
-                <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                {active.email}
-              </a>
-              {active.emailAlt ? (
-                <a
-                  href={`mailto:${active.emailAlt}`}
-                  className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                >
-                  <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                  {active.emailAlt}
-                </a>
-              ) : null}
+              <ContactList type="phone" items={active.phones} />
+              <ContactList type="email" items={active.emails} />
             </address>
           </Card>
         </div>

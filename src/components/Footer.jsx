@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Mail, Phone } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import Logo from '@/components/ui/Logo';
 import GlassPanel from '@/components/ui/GlassPanel';
+import ContactList from '@/components/ui/ContactList';
 import { footer, offices, site } from '@/data/site';
 
 export default function Footer() {
@@ -40,39 +41,9 @@ export default function Footer() {
                 </p>
               </address>
 
-              <div className="mt-6 flex flex-col gap-3">
-                <a
-                  href={`tel:${offices[0].phone.replace(/\s/g, '')}`}
-                  className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                >
-                  <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                  {offices[0].phone}
-                </a>
-                {offices[0].phoneAlt ? (
-                  <a
-                    href={`tel:${offices[0].phoneAlt.replace(/\s/g, '')}`}
-                    className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                  >
-                    <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                    {offices[0].phoneAlt}
-                  </a>
-                ) : null}
-                <a
-                  href={`mailto:${offices[0].email}`}
-                  className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                >
-                  <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                  {offices[0].email}
-                </a>
-                {offices[0].emailAlt ? (
-                  <a
-                    href={`mailto:${offices[0].emailAlt}`}
-                    className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
-                  >
-                    <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
-                    {offices[0].emailAlt}
-                  </a>
-                ) : null}
+              <div className="mt-6 flex flex-col gap-5">
+                <ContactList type="phone" items={offices[0].phones} />
+                <ContactList type="email" items={offices[0].emails} />
               </div>
             </div>
 
