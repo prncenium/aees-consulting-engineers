@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
  * Vercel serverless function: delivers the contact form to the inbox.
  *
  * Credentials come from environment variables — never commit them:
- *   SMTP_HOST  smtp.titan.email
+ *   SMTP_HOST  smtpout.secureserver.net
  *   SMTP_PORT  465
  *   SMTP_USER  info@aeesconsulting.in
  *   SMTP_PASS  <mailbox password>
@@ -46,11 +46,11 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  const host = SMTP_HOST || 'smtp.titan.email';
+  const host = SMTP_HOST || 'smtpout.secureserver.net';
   const configured = Number(SMTP_PORT || 465);
 
-  // Titan accepts implicit TLS on 465 and STARTTLS on 587. Some mailboxes are
-  // only enabled for one of them, so try the configured port first and fall
+  // secureserver accepts implicit TLS on 465 and STARTTLS on 587. Some mailboxes
+  // are only enabled for one of them, so try the configured port first and fall
   // back to the other rather than failing outright.
   const ports = configured === 587 ? [587, 465] : [465, 587];
 
@@ -106,21 +106,11 @@ export default async function handler(req, res) {
         response: error?.response,
         message: error?.message,
       });
+      // A rejected login fails identically on every port — retrying only burns
+      // the function's time budget.
+      if (error?.code === 'EAUTH') break;
     }
   }
 
-  return res.status(502).json({
-    error: 'Could not send the message',
-    code: lastError?.code ?? null,
-    detail: lastError?.response ?? lastError?.message ?? null,
-    // Masked config echo so a misconfigured variable is obvious without ever
-    // exposing the password itself.
-    config: {
-      host,
-      portsTried: ports,
-      user: SMTP_USER,
-      passLength: SMTP_PASS ? SMTP_PASS.length : 0,
-      passHasWhitespace: SMTP_PASS ? SMTP_PASS !== SMTP_PASS.trim() : false,
-    },
-  });
+  return res.status(502).json({ error: 'Could not send the message' });
 }

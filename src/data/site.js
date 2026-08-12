@@ -44,14 +44,14 @@ export const contactChannels = [
   {
     id: 'general',
     icon: 'Mail',
-    label: 'General enquiries',
+    label: 'HR and career',
     values: [{ value: 'info@aeesconsulting.in', href: 'mailto:info@aeesconsulting.in' }],
     note: 'Our primary address. Answered within one working day.',
   },
   {
     id: 'email-alt',
     icon: 'Mail',
-    label: 'Alternate email',
+    label: 'General enquiries',
     values: [
       { value: 'aeesbbsr@gmail.com', href: 'mailto:aeesbbsr@gmail.com' },
       { value: 'mmgarnaik@gmail.com', href: 'mailto:mmgarnaik@gmail.com' },
