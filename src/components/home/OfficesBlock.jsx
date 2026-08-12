@@ -98,6 +98,15 @@ export default function OfficesBlock() {
                 <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
                 {active.phone}
               </a>
+              {active.phoneAlt ? (
+                <a
+                  href={`tel:${active.phoneAlt.replace(/\s/g, '')}`}
+                  className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                >
+                  <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
+                  {active.phoneAlt}
+                </a>
+              ) : null}
               <a
                 href={`mailto:${active.email}`}
                 className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
@@ -105,6 +114,15 @@ export default function OfficesBlock() {
                 <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
                 {active.email}
               </a>
+              {active.emailAlt ? (
+                <a
+                  href={`mailto:${active.emailAlt}`}
+                  className="link-sweep inline-flex w-fit items-center gap-3 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                >
+                  <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
+                  {active.emailAlt}
+                </a>
+              ) : null}
             </address>
           </Card>
         </div>

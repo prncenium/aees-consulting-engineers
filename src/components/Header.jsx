@@ -26,6 +26,14 @@ export default function Header() {
             <Phone aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.75} />
             {head.phone}
           </a>
+          {head.phoneAlt ? (
+            <a
+              href={`tel:${head.phoneAlt.replace(/\s/g, '')}`}
+              className="link-sweep inline-flex items-center gap-2 text-[0.8125rem] font-medium text-meta transition-colors duration-200 hover:text-accent-ink"
+            >
+              {head.phoneAlt}
+            </a>
+          ) : null}
           <a
             href={`mailto:${head.email}`}
             className="link-sweep inline-flex items-center gap-2 text-[0.8125rem] font-medium text-meta transition-colors duration-200 hover:text-accent-ink"

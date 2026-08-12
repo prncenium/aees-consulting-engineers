@@ -218,12 +218,28 @@ export default function Contact() {
                       >
                         {office.phone}
                       </a>
+                      {office.phoneAlt ? (
+                        <a
+                          href={`tel:${office.phoneAlt.replace(/\s/g, '')}`}
+                          className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                        >
+                          {office.phoneAlt}
+                        </a>
+                      ) : null}
                       <a
                         href={`mailto:${office.email}`}
                         className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
                       >
                         {office.email}
                       </a>
+                      {office.emailAlt ? (
+                        <a
+                          href={`mailto:${office.emailAlt}`}
+                          className="link-sweep text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                        >
+                          {office.emailAlt}
+                        </a>
+                      ) : null}
                     </div>
                     <a
                       href={mapLinkUrl(office.mapQuery)}

@@ -48,6 +48,15 @@ export default function Footer() {
                   <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
                   {offices[0].phone}
                 </a>
+                {offices[0].phoneAlt ? (
+                  <a
+                    href={`tel:${offices[0].phoneAlt.replace(/\s/g, '')}`}
+                    className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                  >
+                    <Phone aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
+                    {offices[0].phoneAlt}
+                  </a>
+                ) : null}
                 <a
                   href={`mailto:${offices[0].email}`}
                   className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
@@ -55,6 +64,15 @@ export default function Footer() {
                   <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
                   {offices[0].email}
                 </a>
+                {offices[0].emailAlt ? (
+                  <a
+                    href={`mailto:${offices[0].emailAlt}`}
+                    className="link-sweep inline-flex w-fit items-center gap-2.5 text-copy-sm font-medium text-ink transition-colors duration-200 hover:text-accent-ink"
+                  >
+                    <Mail aria-hidden="true" className="h-4 w-4 text-muted" strokeWidth={1.75} />
+                    {offices[0].emailAlt}
+                  </a>
+                ) : null}
               </div>
             </div>
 
