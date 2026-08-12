@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/((?!api/|assets/|@vite|@fs|@react-refresh|src/|node_modules/).*)",
       "destination": "/index.html"
     }
   ]

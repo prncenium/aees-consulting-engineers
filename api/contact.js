@@ -29,8 +29,21 @@ export default async function handler(req, res) {
   }
 
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_TO } = process.env;
-  if (!SMTP_USER || !SMTP_PASS) {
+  const isDev = process.env.NODE_ENV === 'development' || process.env.DEV_MODE === 'true';
+  
+  if (!isDev && (!SMTP_USER || !SMTP_PASS)) {
     return res.status(500).json({ error: 'Mail transport is not configured' });
+  }
+
+  // Development mode: Log instead of sending (when NODE_ENV=development or DEV_MODE=true)
+  if (isDev) {
+    console.log('\n✓ [DEVELOPMENT MODE] Contact form submission logged:');
+    console.log('  From:', clean(name), `<${clean(email)}>`);
+    console.log('  Phone:', clean(phone));
+    console.log('  Subject:', clean(subject));
+    console.log('  Message:', clean(message));
+    console.log('  (In production, this will be emailed to', MAIL_TO || SMTP_USER, ')\n');
+    return res.status(200).json({ ok: true });
   }
 
   const host = SMTP_HOST || 'smtp.titan.email';
