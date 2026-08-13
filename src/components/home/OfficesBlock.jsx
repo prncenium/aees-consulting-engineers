@@ -3,7 +3,7 @@ import { MapPin } from 'lucide-react';
 import Section from '@/components/ui/Section';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Card from '@/components/ui/Card';
-import MapEmbed from '@/components/ui/MapEmbed';
+
 import ContactList from '@/components/ui/ContactList';
 import { offices, site } from '@/data/site';
 import { cn } from '@/lib/utils';
@@ -99,11 +99,10 @@ export default function OfficesBlock() {
         </div>
 
         <div className="lg:col-span-7">
-          <MapEmbed
-            key={active.id}
-            query={active.mapQuery}
-            title={`Map showing the AEES ${active.city} office`}
-            ratio="aspect-[4/3] lg:aspect-[3/2]"
+          <img
+            src="https://res.cloudinary.com/dbtfi1rbi/image/upload/v1786524314/Gemini_Generated_Image_ec3a9tec3a9tec3a_cwgehu.png"
+            alt="AEES Consulting Engineers office location"
+            className="aspect-[4/3] lg:aspect-[3/2] w-full h-full object-cover rounded-2xl"
           />
         </div>
       </div>

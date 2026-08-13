@@ -6,7 +6,7 @@ import Section from '@/components/ui/Section';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Card from '@/components/ui/Card';
 import ContactList from '@/components/ui/ContactList';
-import MapEmbed from '@/components/ui/MapEmbed';
+
 import RevealGroup, { Reveal, RevealItem } from '@/components/ui/Reveal';
 import ContactForm from '@/components/contact/ContactForm';
 import { contactIntro, formIntro, responsePromise } from '@/data/contact';
@@ -195,10 +195,10 @@ export default function Contact() {
 
         <div className="mt-12 grid grid-cols-1 gap-8 lg:mt-14 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <MapEmbed
-              query={head.mapQuery}
-              title={`Map showing the AEES head office in ${head.city}`}
-              ratio="aspect-[4/3] lg:aspect-[16/10]"
+            <img
+              src="https://res.cloudinary.com/dbtfi1rbi/image/upload/v1786524314/Gemini_Generated_Image_ec3a9tec3a9tec3a_cwgehu.png"
+              alt="AEES Consulting Engineers head office location"
+              className="aspect-[4/3] lg:aspect-[16/10] w-full h-full object-cover rounded-2xl"
             />
           </div>
 
